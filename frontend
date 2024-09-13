@@ -1,0 +1,54 @@
+// MainActivity.kt
+package com.example.agrivanguard
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+
+class MainActivity : AppCompatActivity() {
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Language Selection
+        val language = selectLanguage() // Mock function to represent language selection
+        
+        // OTP Login
+        val mobileNumber = "+911234567890" // Replace with user input
+        sendOtp(mobileNumber)
+
+        // Capture OTP Automatically or Manually
+        autoCaptureOtp() // Mock function to represent OTP auto capture
+    }
+
+    private fun sendOtp(mobileNumber: String) {
+        // Firebase OTP Functionality
+        FirebaseAuth.getInstance().verifyPhoneNumber(
+            mobileNumber,
+            60,
+            java.util.concurrent.TimeUnit.SECONDS,
+            this,
+            object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    // Automatically capture OTP
+                    signInWithPhoneAuthCredential(credential)
+                }
+
+                override fun onVerificationFailed(e: FirebaseException) {
+                    Toast.makeText(applicationContext, "OTP failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+    }
+
+    private fun autoCaptureOtp() {
+        // This will automatically capture the OTP if Firebase succeeds
+    }
+
+    private fun selectLanguage(): String {
+        // Language selection logic
+        return "English" // Placeholder value
+    }
+}
