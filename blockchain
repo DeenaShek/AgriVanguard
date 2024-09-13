@@ -1,0 +1,37 @@
+// AgriVanguard.sol
+pragma solidity ^0.8.0;
+
+contract AgriVanguard {
+    
+    struct Farmer {
+        address farmerAddress;
+        string name;
+        string location;
+        uint256 wasteAmount;
+    }
+    
+    struct Recycler {
+        address recyclerAddress;
+        string recyclerType;
+    }
+    
+    mapping(address => Farmer) public farmers;
+    mapping(address => Recycler) public recyclers;
+    
+    event WasteSold(address indexed farmer, address indexed recycler, uint256 amount);
+
+    function registerFarmer(string memory _name, string memory _location, uint256 _wasteAmount) public {
+        farmers[msg.sender] = Farmer(msg.sender, _name, _location, _wasteAmount);
+    }
+
+    function registerRecycler(string memory _recyclerType) public {
+        recyclers[msg.sender] = Recycler(msg.sender, _recyclerType);
+    }
+
+    function sellWaste(address _recycler, uint256 _amount) public {
+        require(farmers[msg.sender].wasteAmount >= _amount, "Not enough waste available");
+        
+        farmers[msg.sender].wasteAmount -= _amount;
+        emit WasteSold(msg.sender, _recycler, _amount);
+    }
+}
