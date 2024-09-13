@@ -1,0 +1,28 @@
+# ai_voice_command.py
+import speech_recognition as sr
+
+def recognize_voice():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Speak now...")
+        audio = recognizer.listen(source)
+
+        try:
+            text = recognizer.recognize_google(audio)
+            print(f"You said: {text}")
+            return text
+        except sr.UnknownValueError:
+            print("Could not understand audio")
+        except sr.RequestError:
+            print("Error with the service")
+
+def provide_ai_insights(user_input):
+    # Placeholder for AI model logic, providing suggestions based on input
+    if "waste" in user_input:
+        print("You can sell your waste to recyclers nearby.")
+    else:
+        print("Sorry, I don't have any suggestions.")
+
+if __name__ == "__main__":
+    user_input = recognize_voice()
+    provide_ai_insights(user_input)
