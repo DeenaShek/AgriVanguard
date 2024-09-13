@@ -1,0 +1,30 @@
+// server.js
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+app.post('/login', (req, res) => {
+    const { phoneNumber, otp } = req.body;
+
+    // OTP validation logic
+    if (validateOtp(phoneNumber, otp)) {
+        res.status(200).json({ message: "Login successful", userId: generateUserId() });
+    } else {
+        res.status(400).json({ message: "Invalid OTP" });
+    }
+});
+
+function validateOtp(phone, otp) {
+    // Mock OTP validation (replace with Firebase/other service logic)
+    return otp === "123456"; // Placeholder OTP
+}
+
+function generateUserId() {
+    return "user_" + Math.random().toString(36).substring(7);
+}
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
